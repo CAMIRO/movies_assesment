@@ -3,36 +3,26 @@ import './App.css'
 // import { useRef } from "react";
 // useRef: referencia mutable que perciste durante todo el ciclo de vida de tu componente
 import { useMovies } from './hooks/useMovies.js'
+import { useSearch } from './hooks/useSearch.js'
+
 import { Movies } from './components/Movies.jsx'
-import { useState, useEffect } from 'react'
 
 function App() {
   const { movies } = useMovies()
-  const [query, setQuery] = useState('')
-  const [error, setError] = useState(null)
+  const { search, updateSearch, error } = useSearch()
+
+  //const counter = useRef(0) // valor que persiste entre renders
 
   const handleSubmit = event => {
     event.preventDefault()
-    // const { query } = Object.fromEntries(new window.FormData(event.target));
-    // console.log("🚀 ~  query", query);
-    console.log({ query })
+    // const { search } = Object.fromEntries(new window.FormData(event.target));
+    // console.log("🚀 ~  search", search);
+    console.log({ search })
   }
 
   const handleChange = event => {
-    setQuery(event.target.value)
+    updateSearch(event.target.value)
   }
-
-  useEffect(() => {
-    if (query === '') {
-      setError('introduce un valor')
-      return
-    }
-    if (query.match(/^\d+$/)) {
-      setError('no se puede buscar pelicula con solo numeros')
-      return
-    }
-    setError(null)
-  }, [query])
 
   return (
     <div className="page">
@@ -40,8 +30,8 @@ function App() {
         <h1>Buscador de Peliculas</h1>
         <form className="form" onSubmit={handleSubmit}>
           <input
-            value={query}
-            name="query"
+            value={search}
+            name="search"
             type="text"
             onChange={handleChange}
             placeholder="Advengers, Star wars, The Matrix"
