@@ -8,8 +8,8 @@ import { useSearch } from './hooks/useSearch.js'
 import { Movies } from './components/Movies.jsx'
 
 function App() {
-  const { movies } = useMovies()
   const { search, updateSearch, error } = useSearch()
+  const { movies, loading, getMovies } = useMovies({ search })
 
   //const counter = useRef(0) // valor que persiste entre renders
 
@@ -17,7 +17,7 @@ function App() {
     event.preventDefault()
     // const { search } = Object.fromEntries(new window.FormData(event.target));
     // console.log("🚀 ~  search", search);
-    console.log({ search })
+    getMovies()
   }
 
   const handleChange = event => {
@@ -41,9 +41,7 @@ function App() {
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </header>
 
-      <main>
-        <Movies movies={movies} />
-      </main>
+      <main>{loading ? <p>Cargando...</p> : <Movies movies={movies} />}</main>
     </div>
   )
 }
