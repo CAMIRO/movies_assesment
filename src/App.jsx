@@ -1,11 +1,15 @@
 // https://www.twitch.tv/videos/1732102325
 import './App.css'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 // import { useRef } from "react";
 // useRef: referencia mutable que perciste durante todo el ciclo de vida de tu componente
+
+// External libraries
+import debounce from 'just-debounce-it'
+// Hooks
 import { useMovies } from './hooks/useMovies.js'
 import { useSearch } from './hooks/useSearch.js'
-
+// Components
 import { Movies } from './components/Movies.jsx'
 
 function App() {
@@ -15,6 +19,14 @@ function App() {
   const { movies, loading, getMovies } = useMovies({ search, sort })
 
   //const counter = useRef(0) // valor que persiste entre renders
+  const debouncedGetMovies = useCallback(
+    debounce(search => {
+      console.log('search', search)
+      getMovies({ search })
+    }, 300),
+
+    []
+  )
 
   const handleSubmit = event => {
     event.preventDefault()
@@ -30,7 +42,7 @@ function App() {
   const handleChange = event => {
     const newSearch = event.target.value
     updateSearch(newSearch)
-    getMovies({ search: newSearch })
+    debouncedGetMovies(newSearch)
   }
 
   return (
